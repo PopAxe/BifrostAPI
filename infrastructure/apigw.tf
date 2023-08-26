@@ -21,17 +21,6 @@ resource "aws_apigatewayv2_api_mapping" "bifrost_api_domain_mapping" {
   stage       = "$default"
 }
 
-resource "aws_apigatewayv2_authorizer" "bifrost_api_authorizer" {
-  name             = "JWTAuth"
-  api_id           = aws_apigatewayv2_api.bifrost_api.id
-  authorizer_type  = "JWT"
-  identity_sources = ["$request.header.Authorization"]
-  jwt_configuration {
-    audience = var.audiences
-    issuer   = "https://auth.gtech.dev"
-  }
-}
-
 resource "aws_lambda_permission" "api" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
