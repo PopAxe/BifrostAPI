@@ -63,13 +63,13 @@ resource "aws_lambda_function" "bifrost_api_lambda" {
 
   environment {
     variables = {
-        CLIENT_ID = var.client_id,
-        CLIENT_SECRET = var.client_secret,
-        KEYPAIR_ID = var.keypair_id,
-        MONGO_USERNAME = var.mongo_username,
-        MONGO_PASSWORD = var.mongo_password,
-        MONGO_HOST = var.mongo_host,
-        MONGO_DB = var.mongo_db
+      CLIENT_ID      = var.client_id,
+      CLIENT_SECRET  = var.client_secret,
+      KEYPAIR_ID     = var.keypair_id,
+      MONGO_USERNAME = var.mongo_username,
+      MONGO_PASSWORD = var.mongo_password,
+      MONGO_HOST     = var.mongo_host,
+      MONGO_DB       = var.mongo_db
     }
   }
 }

@@ -3,8 +3,6 @@ name: 'Build and Deploy'
 env:
   ENTRYPOINT: 'BifrostApiLambdaApplication'
 
-  TF_VAR_audiences: ${{ secrets.AUDIENCES }}
-
   TF_VAR_client_id: ${{ secrets.CLIENT_ID }}
   CLIENT_ID: ${{ secrets.CLIENT_ID }}
 

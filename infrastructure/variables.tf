@@ -7,33 +7,29 @@ variable "cloudflare_zone_id" {
 }
 
 variable "client_id" {
-    type = string
+  type = string
 }
 
 variable "client_secret" {
-    type = string
+  type = string
 }
 
 variable "keypair_id" {
-    type = string
+  type = string
 }
 
 variable "mongo_username" {
-    type = string
+  type = string
 }
 
 variable "mongo_password" {
-    type = string
+  type = string
 }
 
 variable "mongo_host" {
-    type = string
+  type = string
 }
 
 variable "mongo_db" {
-    type = string
-}
-
-variable "audiences" {
-  type = list(any)
+  type = string
 }
