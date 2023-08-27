@@ -63,6 +63,7 @@ resource "aws_lambda_function" "bifrost_api_lambda" {
 
   environment {
     variables = {
+      ISSUER_URI     = var.issuer_uri,
       CLIENT_ID      = var.client_id,
       CLIENT_SECRET  = var.client_secret,
       KEYPAIR_ID     = var.keypair_id,

@@ -6,6 +6,10 @@ variable "cloudflare_zone_id" {
   type = string
 }
 
+variable "issuer_uri" {
+  type = string
+}
+
 variable "client_id" {
   type = string
 }
