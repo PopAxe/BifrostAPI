@@ -64,7 +64,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "bifrost_api_bucke
 }
 
 resource "aws_s3_object" "bifrost_code" {
-  bucket = aws_s3_bucket.bifrost_api.bucket_regional_domain_name
+  bucket = aws_s3_bucket.bifrost_api.bucket
   key    = "bifrost-api.zip"
   source = "../build/distributions/bifrost-api-1.0.0.zip"
   etag   = filesha256("../build/distributions/bifrost-api-1.0.0.zip")
