@@ -77,7 +77,7 @@ resource "aws_lambda_function" "bifrost_api_lambda" {
   role          = aws_iam_role.bifrost_api_lambda_role.arn
   handler       = "dev.gtech.bifrost.bifrostapi.BifrostApiLambdaApplication"
   memory_size   = 256
-  publish = true
+  publish       = true
   snap_start {
     apply_on = "PublishedVersions"
   }
