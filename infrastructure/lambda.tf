@@ -54,7 +54,7 @@ resource "aws_lambda_function" "bifrost_api_lambda" {
   filename      = "../build/distributions/bifrost-api-1.0.0.zip"
   function_name = "BifrostApi"
   role          = aws_iam_role.bifrost_api_lambda_role.arn
-  handler       = "bifrost-api"
+  handler       = "dev.gtech.bifrost.bifrostapi.BifrostApiLambdaApplication"
   memory_size   = 256
 
   source_code_hash = filebase64sha256("../build/distributions/bifrost-api-1.0.0.zip")

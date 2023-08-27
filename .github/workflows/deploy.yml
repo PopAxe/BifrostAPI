@@ -3,6 +3,7 @@ name: 'Build and Deploy'
 env:
   ENTRYPOINT: 'BifrostApiLambdaApplication'
 
+  ISSUER_URI: ${{ secrets.ISSUER_URI }}
   TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
   TF_VAR_cloudflare_zone_id: ${{ secrets.CLOUDFLARE_ZONE_ID }}
 
