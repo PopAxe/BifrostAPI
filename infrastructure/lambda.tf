@@ -65,7 +65,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "bifrost_api_bucke
 
 resource "aws_s3_object" "bifrost_code" {
   bucket = aws_s3_bucket.bifrost_api.bucket
-  key    = "bifrost-api.zip"
+  key    = uuid()
   source = "../build/distributions/bifrost-api-1.0.0.zip"
   etag   = filesha256("../build/distributions/bifrost-api-1.0.0.zip")
 }
@@ -77,6 +77,10 @@ resource "aws_lambda_function" "bifrost_api_lambda" {
   role          = aws_iam_role.bifrost_api_lambda_role.arn
   handler       = "dev.gtech.bifrost.bifrostapi.BifrostApiLambdaApplication"
   memory_size   = 256
+  publish = true
+  snap_start {
+    apply_on = "PublishedVersions"
+  }
 
   source_code_hash = aws_s3_object.bifrost_code.source_hash
 
@@ -94,17 +98,4 @@ resource "aws_lambda_function" "bifrost_api_lambda" {
       MONGO_DB       = var.mongo_db
     }
   }
-}
-
-resource "aws_lambda_alias" "lambda_alias" {
-  depends_on       = [aws_lambda_function.bifrost_api_lambda]
-  name             = "BifrostLambdaAlias"
-  function_name    = aws_lambda_function.bifrost_api_lambda.arn
-  function_version = "1"
-}
-
-resource "aws_lambda_provisioned_concurrency_config" "lambda_provisioned_concurrency_config" {
-  function_name                     = aws_lambda_function.bifrost_api_lambda.arn
-  provisioned_concurrent_executions = 2
-  qualifier                         = aws_lambda_alias.lambda_alias.name
 }
