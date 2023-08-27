@@ -71,7 +71,6 @@ resource "aws_s3_object" "bifrost_code" {
 }
 
 resource "aws_lambda_function" "bifrost_api_lambda" {
-  filename      = "../build/distributions/bifrost-api-1.0.0.zip"
   s3_bucket     = aws_s3_bucket.bifrost_api.arn
   s3_key        = aws_s3_object.bifrost_code.key
   function_name = "BifrostApi"
