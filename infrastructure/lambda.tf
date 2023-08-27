@@ -76,6 +76,7 @@ resource "aws_lambda_function" "bifrost_api_lambda" {
 }
 
 resource "aws_lambda_alias" "lambda_alias" {
+  depends_on       = [aws_lambda_function.bifrost_api_lambda]
   name             = "BifrostLambdaAlias"
   function_name    = aws_lambda_function.bifrost_api_lambda.arn
   function_version = "1"
