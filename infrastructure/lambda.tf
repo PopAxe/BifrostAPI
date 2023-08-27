@@ -79,7 +79,7 @@ resource "aws_lambda_function" "bifrost_api_lambda" {
   handler       = "dev.gtech.bifrost.bifrostapi.BifrostApiLambdaApplication"
   memory_size   = 256
 
-  source_code_hash = filebase64sha256("../build/distributions/bifrost-api-1.0.0.zip")
+  source_code_hash = aws_s3_object.bifrost_code.source_hash
 
   runtime = "java17"
 
