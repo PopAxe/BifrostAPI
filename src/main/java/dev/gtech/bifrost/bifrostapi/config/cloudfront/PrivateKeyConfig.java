@@ -37,7 +37,6 @@ public class PrivateKeyConfig {
     }
 
     private PrivateKey stringToPrivateKey(String stringData) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        log.info(stringData);
         String sanitizedPrivateKey = stringData.replace("-----BEGIN PRIVATE KEY-----", "")
             .replaceAll(System.lineSeparator(), "")
             .replace("-----END PRIVATE KEY-----", "");
