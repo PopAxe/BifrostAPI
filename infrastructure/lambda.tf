@@ -71,7 +71,7 @@ resource "aws_s3_object" "bifrost_code" {
 }
 
 resource "aws_lambda_function" "bifrost_api_lambda" {
-  s3_bucket     = aws_s3_bucket.bifrost_api.arn
+  s3_bucket     = aws_s3_bucket.bifrost_api.bucket
   s3_key        = aws_s3_object.bifrost_code.key
   function_name = "BifrostApi"
   role          = aws_iam_role.bifrost_api_lambda_role.arn
