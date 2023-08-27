@@ -74,3 +74,15 @@ resource "aws_lambda_function" "bifrost_api_lambda" {
     }
   }
 }
+
+resource "aws_lambda_alias" "lambda_alias" {
+  name             = "BifrostLambdaAlias"
+  function_name    = aws_lambda_function.bifrost_api_lambda.arn
+  function_version = "1"
+}
+
+resource "aws_lambda_provisioned_concurrency_config" "lambda_provisioned_concurrency_config" {
+  function_name                     = aws_lambda_function.bifrost_api_lambda.arn
+  provisioned_concurrent_executions = 2
+  qualifier                         = aws_lambda_alias.lambda_alias.name
+}
