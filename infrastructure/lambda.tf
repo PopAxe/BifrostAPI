@@ -50,8 +50,30 @@ resource "aws_iam_role" "bifrost_api_lambda_role" {
   assume_role_policy = data.aws_iam_policy_document.bifrost_api_lambda_assume_role_policy_document.json
 }
 
+resource "aws_s3_bucket" "bifrost_api" {
+  bucket = "bifrost-api"
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "bifrost_api_bucket_sse" {
+  bucket = aws_s3_bucket.bifrost_api.id
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "aws:kms"
+    }
+  }
+}
+
+resource "aws_s3_object" "bifrost_code" {
+  bucket = aws_s3_bucket.bifrost_api.bucket_regional_domain_name
+  key    = "bifrost-api.zip"
+  source = "../build/distributions/bifrost-api-1.0.0.zip"
+  etag   = filesha256("../build/distributions/bifrost-api-1.0.0.zip")
+}
+
 resource "aws_lambda_function" "bifrost_api_lambda" {
   filename      = "../build/distributions/bifrost-api-1.0.0.zip"
+  s3_bucket     = aws_s3_bucket.bifrost_api.arn
+  s3_key        = aws_s3_object.bifrost_code.key
   function_name = "BifrostApi"
   role          = aws_iam_role.bifrost_api_lambda_role.arn
   handler       = "dev.gtech.bifrost.bifrostapi.BifrostApiLambdaApplication"
