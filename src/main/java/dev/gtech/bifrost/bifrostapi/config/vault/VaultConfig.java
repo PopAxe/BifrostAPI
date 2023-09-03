@@ -25,7 +25,7 @@ public class VaultConfig extends AbstractVaultConfiguration {
     @Value("${vault.hostname}")
     private String vaultHostname;
 
-    @Value("$vault.port")
+    @Value("${vault.port}")
     private int vaultPort;
     
     @Override
