@@ -2,7 +2,7 @@
 The Bifrost API serves as the bridge between the two realms: Applications needing proper authentication mechansims, and the public internet. This package accomplishes that by providing two functionalities: sign URLs for CloudFront distributions and endpoints for fetching the user information. This is accomplished by all non-error related endpoints requiring authentication via OIDC. The user information is stored in a 20 hour session thus making it possible to protect CloudFront distributions as well as fetch user information from a frontend library (coming soon) and obtain the ID token for JWT-protected API gateways.
 
 ### Usage / Installation
-1. Pull the image: `docker pull ghcr.io/hunoz/bifrost-api`
+1. Pull the image: `docker pull ghcr.io/hunoz/bifrost-api` or `docker pull hunoz/bifrost-api`
 2. Set up the required environment variables `VAULT_ROLEID` and `VAULT_SECRETID` which correspond to an application role in Hashicorp Vault
 
 ### Development
