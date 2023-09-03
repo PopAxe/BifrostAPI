@@ -15,8 +15,11 @@ public class DevVaultConfig extends AbstractVaultConfiguration {
     @Value("${vault.token}")
     private String token;
 
-    @Value("${vault.endpoint}")
-    private String vaultEndpoint;
+    @Value("${vault.hostname}")
+    private String vaultHostname;
+
+    @Value("${vault.port}")
+    private int vaultPort;
     
     @Override
     public ClientAuthentication clientAuthentication() {
@@ -25,8 +28,6 @@ public class DevVaultConfig extends AbstractVaultConfiguration {
 
     @Override
     public VaultEndpoint vaultEndpoint() {
-        String vaultHostname = vaultEndpoint.split(":")[0];
-        int vaultPort = Integer.valueOf(vaultEndpoint.split(":")[1]);
         return VaultEndpoint.create(vaultHostname, vaultPort);
     }
 }

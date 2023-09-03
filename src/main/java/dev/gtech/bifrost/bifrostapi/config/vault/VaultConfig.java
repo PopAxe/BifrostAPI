@@ -21,6 +21,12 @@ public class VaultConfig extends AbstractVaultConfiguration {
 
     @Value("${vault.secretId}")
     private String secretId;
+
+    @Value("${vault.hostname}")
+    private String vaultHostname;
+
+    @Value("$vault.port")
+    private int vaultPort;
     
     @Override
     public ClientAuthentication clientAuthentication() {
@@ -35,6 +41,6 @@ public class VaultConfig extends AbstractVaultConfiguration {
 
     @Override
     public VaultEndpoint vaultEndpoint() {
-        return VaultEndpoint.create("vault", 8100);
+        return VaultEndpoint.create(vaultHostname, vaultPort);
     }
 }

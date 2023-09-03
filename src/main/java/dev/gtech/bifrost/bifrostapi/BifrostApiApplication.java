@@ -14,11 +14,14 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 public class BifrostApiApplication extends SpringBootServletInitializer {
 
 	private static final Map<String, Boolean> devEnvironmentVariables = Map.of(
-		"VAULT_ENDPOINT", true,
+		"VAULT_HOSTNAME", true,
+		"VAULT_PORT", true,
 		"VAULT_TOKEN", true
 	);
 
 	private static final Map<String, Boolean> prodEnvironmentVariables = Map.of(
+		"VAULT_HOSTNAME", true,
+		"VAULT_PORT", true,
 		"VAULT_ROLEID", true,
 		"VAULT_SECRETID", true
 	);
