@@ -1,0 +1,103 @@
+buildscript {
+    ext { springBootVersion = '3.1.3' }
+	repositories {
+		mavenCentral()
+	}
+    dependencies {
+          classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+plugins {
+	id 'java'
+	id 'application'
+	id 'org.springframework.boot' version '3.1.3'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'dev.gtech.bifrost'
+version = '1.0.0'
+
+java {
+	sourceCompatibility = '17'
+}
+
+bootJar {
+	archiveFileName = 'bifrost-api.jar'
+}
+
+task printVersion {
+    // any code that goes here is part of configuring the task
+    // this code will always get run, even if the task is not executed
+    doLast { // add a task action
+        // any code that goes here is part of executing the task
+        // this code will only get run if and when the task gets executed
+        println project.version
+    }
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:3.1.3'
+	implementation 'org.springframework.boot:spring-boot-starter-security:3.1.3'
+	implementation 'org.springframework.boot:spring-boot-starter-web:3.1.3'
+	implementation 'org.springframework.session:spring-session-data-mongodb:3.0.3'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:3.1.3'
+	implementation 'org.springframework.vault:spring-vault-core:3.0.4'
+	implementation 'software.amazon.awssdk:cloudfront:2.20.124'
+	implementation 'org.apache.commons:commons-lang3'
+	implementation 'software.amazon.awssdk:secretsmanager:2.20.125'
+	implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
+	implementation 'org.bouncycastle:bcutil-jdk15on:1.70'
+	implementation 'org.bouncycastle:bcpkix-jdk15on:1.70'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+def certFileName = "selfsigned.jks"
+def certFilePath = "./certs/$certFileName"
+task createSelfSignedCert() {
+	doLast {
+		exec {
+			workingDir "./certs"
+			ignoreExitValue true
+			executable "${System.getenv("JAVA_HOME")}/bin/keytool"
+			args "-delete -noprompt -alias bifrostapicert".split(" ")
+			args "-keypass selfcert -storepass selfcert -keystore $certFileName".split(" ")
+		}
+		exec {
+			workingDir "./certs"
+			executable "${System.getenv("JAVA_HOME")}/bin/keytool"
+			args "-genkey -noprompt -trustcacerts -keyalg RSA -keysize 2048 -alias bifrostapicert -dname".split(" ")
+			args "CN=localhost, O=Gregory Technical Services, L=Nashville, ST=TN, C=US"
+			args "-keypass selfcert -storepass selfcert -keystore $certFileName".split(" ")
+		}
+	}
+}
+
+bootRun.doFirst {
+	environment "STAGE", "dev"
+}
+
+test {
+	testLogging.showStandardStreams = true
+}
+
+run {
+	dependsOn 'bootRun'
+}
+
+bootRun.dependsOn createSelfSignedCert
