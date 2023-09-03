@@ -1,5 +1,5 @@
 ### Description
-The Bifrost API serves as the bridge between the two realms: My applications needing proper authentication mechansims, and the public internet. This package accomplishes that by providing two functionalities: sign URLs for CloudFront distributions and endpoints for fetching the user information. This is accomplished by all non-error related endpoints requiring authentication via OIDC. The user information is stored in a 20 hour session thus making it possible to protect CloudFront distributions as well as fetch user information from a frontend library (coming soon) and obtain the ID token for JWT-protected API gateways.
+The Bifrost API serves as the bridge between the two realms: Applications needing proper authentication mechansims, and the public internet. This package accomplishes that by providing two functionalities: sign URLs for CloudFront distributions and endpoints for fetching the user information. This is accomplished by all non-error related endpoints requiring authentication via OIDC. The user information is stored in a 20 hour session thus making it possible to protect CloudFront distributions as well as fetch user information from a frontend library (coming soon) and obtain the ID token for JWT-protected API gateways.
 
 ### Notes
 If a new Cloudfront keypair needs to be generated, you need to do the following:
