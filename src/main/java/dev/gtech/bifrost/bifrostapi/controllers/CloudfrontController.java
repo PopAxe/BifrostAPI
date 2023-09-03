@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import dev.gtech.bifrost.bifrostapi.config.settings.BifrostSettings;
 import dev.gtech.bifrost.bifrostapi.models.exceptions.BadRequestException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +33,7 @@ public class CloudfrontController {
     private final CloudFrontUtilities cloudFrontUtilities;
     private final PrivateKey privateKey;
 
-    @Value("${cloudfront.keypair-id}")
-    private String keyPairId;
+    private final BifrostSettings settings;
     private final List<String> allowedDomains = List.of(
         "gtech.dev",
         "cloudfront.net"
@@ -72,7 +71,7 @@ public class CloudfrontController {
 
         CannedSignerRequest request = CannedSignerRequest.builder()
             .resourceUrl(urlPath)
-            .keyPairId(keyPairId)
+            .keyPairId(settings.getKeypairId())
             .expirationDate(user.getExpiresAt())
             .privateKey(privateKey)
             .build();

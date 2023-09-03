@@ -1,35 +1,5 @@
 name: 'Build and Deploy'
 
-env:
-  ENTRYPOINT: 'BifrostApiLambdaApplication'
-
-  TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-  TF_VAR_cloudflare_zone_id: ${{ secrets.CLOUDFLARE_ZONE_ID }}
-
-  TF_VAR_issuer_uri: ${{ secrets.ISSUER_URI }}
-  ISSUER_URI: ${{ secrets.ISSUER_URI }}
-
-  TF_VAR_client_id: ${{ secrets.CLIENT_ID }}
-  CLIENT_ID: ${{ secrets.CLIENT_ID }}
-
-  TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
-  CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-
-  TF_VAR_keypair_id: ${{ secrets.KEYPAIR_ID }}
-  KEPAIR_ID: ${{ secrets.KEYPAIR_ID }}
-
-  TF_VAR_mongo_username: ${{ secrets.MONGO_USERNAME }}
-  MONGO_USERNAME: ${{ secrets.MONGO_USERNAME }}
-
-  TF_VAR_mongo_password: ${{ secrets.MONGO_PASSWORD }}
-  MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
-
-  TF_VAR_mongo_host: ${{ secrets.MONGO_HOST }}
-  MONGO_HOST: ${{ secrets.MONGO_HOST }}
-
-  TF_VAR_mongo_db: ${{ secrets.MONGO_DB }}
-  MONGO_DB: ${{ secrets.MONGO_DB }}
-
 on:
     push:
         branches: [ "java-migration" ]  
@@ -57,13 +27,6 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v3
-    
-            - name: Configure AWS Credentials
-              uses: aws-actions/configure-aws-credentials@v1
-              with:
-                role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-oidc-role
-                role-session-name: github-actions-terraform-bifrost-api
-                aws-region: us-west-2
 
             - name: Set up Java
               uses: actions/setup-java@v3
@@ -74,29 +37,22 @@ jobs:
             - name: Setup Gradle
               uses: gradle/gradle-build-action@v2
 
-            - name: Build Bifrost API
-              run: gradle buildZip
-    
-            - name: Setup Terraform
-              uses: hashicorp/setup-terraform@v1
-    
-        # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
-            - name: Terraform Init
-              run: terraform init
-              working-directory: ./infrastructure
-    
-        # Checks that all Terraform configuration files adhere to a canonical format
-            - name: Terraform Format
-              run: terraform fmt -check
-              working-directory: ./infrastructure
-    
-        # Generates an execution plan for Terraform
-            - name: Terraform Plan
-              run: terraform plan -input=false
-              working-directory: ./infrastructure
-    
-            # On push to "main", build or change infrastructure according to Terraform configuration files
-            # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
-            - name: Terraform Apply
-              run: terraform apply -auto-approve -input=false
-              working-directory: ./infrastructure
+            - name: Get Bifrost API Version
+              id: bifrost-api-version
+              run: echo "API_VERSION=$(gradle -q printVersion)" >> "$GITHUB_OUTPUT"
+
+            - name: Run Tests
+              run: gradle test
+
+            - name: Login to GitHub Container Registry
+              uses: docker/login-action@v1
+              with:
+                registry: ghcr.io
+                username: ${{ github.actor }}
+                password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Build Docker Image
+              run: docker build . --tag ghcr.io/hunoz/bifrost-api:latest --tag ghcr.io/hunoz/bifrost-api:${{ steps.bifrost-api-version.outputs.API_VERSION }}
+
+            - name: Publish Docker Image
+              run: docker push ghcr.io/hunoz/bifrost-api --all-tags

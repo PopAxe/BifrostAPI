@@ -11,15 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.gtech.bifrost.bifrostapi.models.common.GenericResult;
 import dev.gtech.bifrost.bifrostapi.models.common.User;
-import lombok.extern.log4j.Log4j2;
 
-@Log4j2
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserController {
 
     @GetMapping("/info")
-    @ResponseBody
     public User getUser(@AuthenticationPrincipal OidcUser user) {
         return User.fromOidcUser(user);
     }
@@ -27,7 +24,7 @@ public class UserController {
     @GetMapping("/groups")
     @ResponseBody
     public GenericResult<List<String>> getUserGroups(@AuthenticationPrincipal OidcUser user) {
-        return new GenericResult<>(user.getClaimAsStringList("group"));
+        return new GenericResult<>(user.getClaimAsStringList("groups"));
     }
 
     @GetMapping("/token")
