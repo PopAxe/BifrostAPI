@@ -17,7 +17,7 @@ plugins {
 apply plugin: 'io.spring.dependency-management'
 
 group = 'dev.gtech.bifrost'
-version = '1.0.0'
+version = '1.0.1'
 
 java {
 	sourceCompatibility = '17'
