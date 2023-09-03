@@ -52,10 +52,10 @@ jobs:
                 username: ${{ github.actor }}
                 password: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Build Docker Image For GHCR
+            - name: Build Docker Image for GHCR
               run: docker build . --tag ghcr.io/hunoz/bifrost-api:latest --tag ghcr.io/hunoz/bifrost-api:${{ steps.bifrost-api-version.outputs.API_VERSION }}
 
-            - name: Publish Docker Image
+            - name: Publish Docker Image to GHCR
               run: docker push ghcr.io/hunoz/bifrost-api --all-tags
 
             - name: Login to Docker Hub
@@ -64,5 +64,8 @@ jobs:
                 username: ${{ secrets.DOCKER_USERNAME }}
                 password: ${{ secrets.DOCKER_PASSWORD }}
 
-            - name: Build Docker Image For Docker Hub
+            - name: Build Docker Image for Docker Hub
               run: docker build . --tag hunoz/bifrost-api:latest --tag hunoz/bifrost-api:${{ steps.bifrost-api-version.outputs.API_VERSION }}
+
+            - name: Publish Docker Image to Docker Hub
+              run: docker push hunoz/bifrost-api --all-tags
