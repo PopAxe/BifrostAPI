@@ -17,7 +17,7 @@ plugins {
 apply plugin: 'io.spring.dependency-management'
 
 group = 'dev.gtech.bifrost'
-version = '1.0.1'
+version = '1.0.2'
 
 java {
 	sourceCompatibility = '17'
@@ -68,18 +68,17 @@ tasks.named('test') {
 }
 
 def certFileName = "selfsigned.jks"
-def certFilePath = "./certs/$certFileName"
+def certFilePath = "./certs"
 task createSelfSignedCert() {
+	
 	doLast {
 		exec {
-			workingDir "./certs"
 			ignoreExitValue true
 			executable "${System.getenv("JAVA_HOME")}/bin/keytool"
 			args "-delete -noprompt -alias bifrostapicert".split(" ")
 			args "-keypass selfcert -storepass selfcert -keystore $certFileName".split(" ")
 		}
 		exec {
-			workingDir "./certs"
 			executable "${System.getenv("JAVA_HOME")}/bin/keytool"
 			args "-genkey -noprompt -trustcacerts -keyalg RSA -keysize 2048 -alias bifrostapicert -dname".split(" ")
 			args "CN=localhost, O=Gregory Technical Services, L=Nashville, ST=TN, C=US"
@@ -87,6 +86,20 @@ task createSelfSignedCert() {
 		}
 	}
 }
+
+task copySelfSignedCert(type: Copy) {
+	doFirst {
+		mkdir certFilePath
+	}
+
+	doLast {
+		delete certFileName
+	}
+	from certFileName
+	into certFilePath
+}
+
+copySelfSignedCert.dependsOn createSelfSignedCert
 
 bootRun.doFirst {
 	environment "STAGE", "dev"
@@ -100,4 +113,5 @@ run {
 	dependsOn 'bootRun'
 }
 
-bootRun.dependsOn createSelfSignedCert
+bootRun.dependsOn copySelfSignedCert
+bootJar.dependsOn copySelfSignedCert

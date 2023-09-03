@@ -8,7 +8,10 @@ RUN gradle bootJar
 FROM eclipse-temurin:17-jre
 WORKDIR /app
 COPY --from=BUILD_IMAGE /app/build/libs/bifrost-api.jar .
-ENV STAGE=dev
+COPY --from=BUILD_IMAGE /app/certs .
+ENV STAGE=prod
 EXPOSE 8443
 RUN ls /
+# We empty entrypoint because the parent image causes failures trying to execute its script, which we shouldn't need
+ENTRYPOINT []
 CMD [ "java", "-jar", "bifrost-api.jar" ]
