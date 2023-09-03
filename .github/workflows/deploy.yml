@@ -2,7 +2,7 @@ name: 'Build and Deploy'
 
 on:
     push:
-        branches: [ "java-migration" ]  
+        branches: [ "main" ]  
 
 concurrency:
     group: environment-${{ github.ref }}
