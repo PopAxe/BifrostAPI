@@ -1,6 +1,7 @@
 package dev.gtech.bifrost.bifrostapi.config.vault;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.vault.authentication.AppRoleAuthentication;
@@ -8,7 +9,6 @@ import org.springframework.vault.authentication.AppRoleAuthenticationOptions;
 import org.springframework.vault.authentication.ClientAuthentication;
 import org.springframework.vault.authentication.AppRoleAuthenticationOptions.RoleId;
 import org.springframework.vault.authentication.AppRoleAuthenticationOptions.SecretId;
-import org.springframework.vault.client.VaultClients;
 import org.springframework.vault.client.VaultEndpoint;
 import org.springframework.vault.config.AbstractVaultConfiguration;
 
@@ -34,13 +34,15 @@ public class VaultConfig extends AbstractVaultConfiguration {
             AppRoleAuthenticationOptions.builder()
                 .roleId(RoleId.provided(roleId))
                 .secretId(SecretId.provided(secretId))
+                .appRole("bifrost-api")
                 .build(),
-            VaultClients.createRestTemplate()
+            restOperations()
         );
     }
 
     @Override
+    @Bean
     public VaultEndpoint vaultEndpoint() {
-        return VaultEndpoint.create(vaultHostname, vaultPort);
+        return VaultEndpoint.create("vault.gtech.dev", 443);
     }
 }
