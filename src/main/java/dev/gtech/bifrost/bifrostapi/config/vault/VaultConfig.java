@@ -43,6 +43,6 @@ public class VaultConfig extends AbstractVaultConfiguration {
     @Override
     @Bean
     public VaultEndpoint vaultEndpoint() {
-        return VaultEndpoint.create("vault.gtech.dev", 443);
+        return VaultEndpoint.create(vaultHostname, vaultPort);
     }
 }
