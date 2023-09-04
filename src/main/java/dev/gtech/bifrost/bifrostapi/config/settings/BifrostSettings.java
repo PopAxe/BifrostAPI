@@ -4,8 +4,11 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.vault.core.VaultKeyValueOperationsSupport.KeyValueBackend;
+
+import jakarta.annotation.PostConstruct;
+
 import org.springframework.vault.core.VaultTemplate;
+import org.springframework.vault.core.VaultVersionedKeyValueOperations;
 
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +17,8 @@ import lombok.Data;
 @Data
 public class BifrostSettings {
 
-    private final VaultTemplate vaultTemplate;
+    @Autowired
+    private VaultTemplate vaultTemplate;
 
     private MongoDBConfig mongoConfig;
 
@@ -25,10 +29,10 @@ public class BifrostSettings {
     private String clientId;
     private String clientSecret;
 
-    @Autowired
-    public BifrostSettings(VaultTemplate vaultTemplate) {
-        this.vaultTemplate = vaultTemplate;
-        Map<String, Object> envSettings = vaultTemplate.opsForKeyValue("kv", KeyValueBackend.KV_2).get("bifrost-api").getData();
+    @PostConstruct
+    public void init() {
+        VaultVersionedKeyValueOperations ops = vaultTemplate.opsForVersionedKeyValue("/kv");
+        Map<String, Object> envSettings = ops.get("/bifrost-api").getData();
 
         String mongoUsername = envSettings.get("mongoUsername").toString();
         String mongoPassword = envSettings.get("mongoPassword").toString();
