@@ -53,10 +53,10 @@ jobs:
                 password: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Build Docker Image for GHCR
-              run: docker build . --tag ghcr.io/PopAxe/BifrostAPI:latest --tag ghcr.io/PopAxe/BifrostAPI:${{ steps.bifrost-api-version.outputs.API_VERSION }}
+              run: docker build . --tag ghcr.io/PopAxe/bifrost-api:latest --tag ghcr.io/PopAxe/bifrost-api:${{ steps.bifrost-api-version.outputs.API_VERSION }}
 
             - name: Publish Docker Image to GHCR
-              run: docker push ghcr.io/PopAxe/BifrostAPI --all-tags
+              run: docker push ghcr.io/PopAxe/bifrost-api --all-tags
 
             - name: Login to Docker Hub
               uses: docker/login-action@v1
