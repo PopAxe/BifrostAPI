@@ -8,10 +8,9 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class BifrostApiApplication extends SpringBootServletInitializer {
+public class BifrostApiApplication {
 
 	private static final Map<String, Boolean> devEnvironmentVariables = Map.of(
 		"VAULT_HOSTNAME", true,
