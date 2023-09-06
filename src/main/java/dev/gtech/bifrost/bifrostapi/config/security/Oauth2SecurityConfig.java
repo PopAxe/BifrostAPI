@@ -31,7 +31,8 @@ public class Oauth2SecurityConfig {
         return new InMemoryClientRegistrationRepository(this.oauth2ClientRegistrationRepository());
     }
 
-    @Bean ClientRegistration oauth2ClientRegistrationRepository() {
+    @Bean 
+    public ClientRegistration oauth2ClientRegistrationRepository() {
         return ClientRegistrations.fromOidcIssuerLocation(settings.getIssuerUri())
             .registrationId("oidc-client")
             .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
