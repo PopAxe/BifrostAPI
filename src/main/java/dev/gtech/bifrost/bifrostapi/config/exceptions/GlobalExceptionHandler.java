@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import dev.gtech.bifrost.bifrostapi.models.common.GenericResult;
 import dev.gtech.bifrost.bifrostapi.models.exceptions.BadRequestException;
@@ -27,5 +28,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public GenericResult<String> internalServerErrorException(InternalServerErrorException exception) {
         return new GenericResult<>(exception.getLocalizedMessage());
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public GenericResult<String> noHandlerFoundException(NoHandlerFoundException exception) {
+        return new GenericResult<>("Not Found");
     }
 }
