@@ -21,7 +21,7 @@ public class BaseAwsConfig {
     }
 
     @Bean
-    public AwsCredentialsProvider getCredentialsProvider() {
+    public AwsCredentialsProvider getAwsCredentialsProvider() {
         return DefaultCredentialsProvider.create();
     }
 }
