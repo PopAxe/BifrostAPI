@@ -36,12 +36,14 @@ public class BifrostSettings {
 
         String mongoUsername = envSettings.get("mongoUsername").toString();
         String mongoPassword = envSettings.get("mongoPassword").toString();
+        String mongoProtocol = envSettings.get("mongoProtocol").toString();
         String mongoHost = envSettings.get("mongoHost").toString();
         String mongoDatabaseName = envSettings.get("mongoDatabaseName").toString();
 
         this.mongoConfig = MongoDBConfig.builder()
             .username(mongoUsername)
             .password(mongoPassword)
+            .protocol(mongoProtocol)
             .hostname(mongoHost)
             .databaseName(mongoDatabaseName)
             .build();
@@ -59,15 +61,16 @@ public class BifrostSettings {
     public static class MongoDBConfig {
         private String username;
         private String password;
+        private String protocol;
         private String hostname;
         private String databaseName;
 
         public String getUriWithoutDatabase() {
-            return String.format("mongodb://%s:%s@%s", getUsername(), getPassword(), getHostname());
+            return String.format("%s://%s:%s@%s", getProtocol(), getUsername(), getPassword(), getHostname());
         }
 
         public String getUri() {
-            return String.format("mongodb://%s:%s@%s/%s", getUsername(), getPassword(), getHostname(), getDatabaseName());
+            return String.format("%s://%s:%s@%s/%s", getProtocol(), getUsername(), getPassword(), getHostname(), getDatabaseName());
         }
     }
 }
